@@ -1,0 +1,583 @@
+mariadb(mysql)：
+		
+	数据模型：层次模型、网状模型、关系模型
+		
+		关系模型：
+			关系模型：
+				二维关系：row, column
+
+			数据库管理系统：DBMS
+				关系：Relational，RDBMS
+			
+			SQL：Structured Query Language，是一个编程语言
+			SQL接口：类似于OS的shell接口；也提供编程功能；
+				
+				ANSI： SQL标准，SQL-86, SQL-89, SQL-92, SQL-99, SQL-03, ...
+					xml
+					
+				DDL：Data Defined Language
+					CREATE, ALTER, DROP
+				DML: Data Manapulating Language
+					INSERT, DELETE, UPDATE, SELECT
+					
+				编程接口：选择、循环；
+				
+				SQL代码：
+					存储过程：procedure
+					存储函数：function
+					触发器：trigger
+					事件调度器：event scheduler
+					
+					例程：routine
+					
+			用户和权限：
+				用户：用户名和密码；
+				权限：管理类、数据库、表、字段
+				
+		DBMS：DataBase Management System
+			RDBMS：Relational
+				
+			MySQL：单进程，多线程 
+				用户连接：通过线程来实现；
+					线程池：
+	
+	事务(Transaction)：组织多个操作为一个整体，要么全部都执行，要么全部都不执行；
+		“回滚”， rollback
+		
+		Bob:8000, 8000-2000
+		Alice:5000, 5000+2000
+		
+		一个存储系统是否支持事务，测试标准：
+			ACID：
+				A：原子性；
+				C：一致性；
+				I：隔离性；
+				D：持久性；
+		
+	
+	补充材料：RDMBS设计范式基础概念
+
+		设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。
+
+		目前关系数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴德斯科范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。满足最低要求的范式是第一范式（1NF）。在第一范式的基础上进一步满足更多规范要求的称为第二范式（2NF），其余范式以次类推。一般说来，数据库只需满足第三范式(3NF）就行了。
+
+		(1) 第一范式（1NF）
+
+		所谓第一范式（1NF）是指在关系模型中，对域添加的一个规范要求，所有的域都应该是原子性的，即数据库表的每一列都是不可分割的原子数据项，而不能是集合，数组，记录等非原子数据项。即实体中的某个属性有多个值时，必须拆分为不同的属性。在符合第一范式（1NF）表中的每个域值只能是实体的一个属性或一个属性的一部分。简而言之，第一范式就是无重复的域。
+
+		说明：在任何一个关系数据库中，第一范式（1NF）是对关系模式的设计基本要求，一般设计中都必须满足第一范式（1NF）。不过有些关系模型中突破了1NF的限制，这种称为非1NF的关系模型。换句话说，是否必须满足1NF的最低要求，主要依赖于所使用的关系模型。
+
+		(2) 第二范式(2NF)
+
+		第二范式（2NF）是在第一范式（1NF）的基础上建立起来的，即满足第二范式（2NF）必须先满足第一范式（1NF）。第二范式（2NF）要求数据库表中的每个实例或记录必须可以被唯一地区分。选取一个能区分每个实体的属性或属性组，作为实体的唯一标识。
+
+		第二范式（2NF）要求实体的属性完全依赖于主关键字。所谓完全依赖是指不能存在仅依赖主关键字一部分的属性，如果存在，那么这个属性和主关键字的这一部分应该分离出来形成一个新的实体，新实体与原实体之间是一对多的关系。为实现区分通常需要为表加上一个列，以存储各个实例的唯一标识。简而言之，第二范式就是在第一范式的基础上属性完全依赖于主键。
+
+		(3) 第三范式（3NF）
+
+		第三范式（3NF）是第二范式（2NF）的一个子集，即满足第三范式（3NF）必须满足第二范式（2NF）。简而言之，第三范式（3NF）要求一个关系中不能包含已在其它关系已包含的非主关键字信息。简而言之，第三范式就是属性不依赖于其它非主属性，也就是在满足2NF的基础上，任何非主属性不得传递依赖于主属性。
+	
+		基础概念：
+			数据库：数据集合
+			表：为了满足范式设计要求，将一个数据集分拆为多个；
+			
+			约束：constraint，向数据表插入的数据要遵守的限制规则；
+				主键：一个或多个字段的组合，填入主键中的数据，必须不同于已存在的数据；填入的数据必须能在本表中唯一标识本行；不能为空；
+					一个表只能存在一个主键
+					
+				外键：一个表中某字段中能插入的数据，取决于另外一张表的主键中的数据；
+				
+				惟一键：一个或多个字段的组合，填入惟一键中的数据，必须不同于已存在的数据；填入的数据必须能在本表中唯一标识本行；可以为空；
+					一个表可以存在多个唯一键
+					
+				检查性约束：填入的数据取决于自定义的表达式的要求；
+				
+			索引：将表中的某一个或某些字段抽取出来，单独将其组织在一个独特的数据结构中；
+				常用的索引类型：
+					树型：
+					hash：
+					
+				注意：有助于读请求，但不利于写请求；
+			
+		关系运算：
+			选择：挑选出符合条件的行；
+			投影：挑选出符合需要的列；
+			连接：将多张表关联起来；
+				
+		数据抽象：
+			物理层：决定数据的存储格式，即如何将数据组织成为物理文件；即RDBMS在磁盘上如何组织文件；
+			逻辑层：描述DB存储什么数据，以及数据间存在什么样的关系；
+			视图层：描述DB中的部分数据；
+			
+		关系模型的分类：
+			关系模型
+			实体-关系模型
+			基于对象的关系模型
+			半结构化关系模型
+			
+	MariaDB(mysql)：
+		
+		Unireg
+		
+		MySQL AB  --> MySQL
+			Solaris：二进制版本；
+			
+			www.mysql.com
+			
+		MariaDB: www.mariadb.org
+		
+		MariaDB的特性：
+			插件式存储引擎：存储管理器有多种实现版本，彼此间的功能和特性可能略有区别；用户可根据需要灵活选择； 
+			
+			存储引擎也称为“表类型”；
+			
+			(1) 更多的存储引擎；
+				MyISAM：不支持事务；
+				MyISAM --> Aria
+				InnoDB --> XtraDB 
+					：支持事务；
+			(2) 诸多扩展和新特性；
+			(3) 提供了较多的测试组件；
+			(4) truly open source；
+			
+		MySQL的发行机制：
+			Enterprise：提供了更丰富的功能；
+			Community：
+			
+		安装和使用MariaDB：
+			
+			安装方式：
+				(1) rpm包；
+					(a) 由OS的发行商提供；
+					(b) 程序官方提供；
+				(2) 源码包；
+				(3) 通用二进制格式的程序包；
+				
+			通用二进制格式安装MariaDB：
+				(1) 准备数据目录；
+					以/mydata/data目录为例；
+				(2) 安装配置mariadb						
+					# useradd  -r  mysql
+					# tar xf  mariadb-VERSION.tar.xz  -C  /usr/local
+					# cd /usr/local
+					# ln  -sv  mariadb-VERSION  mysql
+					# cd  /usr/local/mysql
+					# chown  -R  root:mysql  ./*
+					# scripts/mysql_install_db  --user=mysql  -datadir=/mydata/data
+					# cp  support-files/mysql.server   /etc/init.d/mysqld
+					# chkconfig   --add  mysqld
+				(3) 提供配置文件
+					ini格式的配置文件；各程序均可通过此配置文件获取配置信息；
+						[program_name]
+										
+					OS Vendor提供mariadb rpm包安装的服务的配置文件查找次序：
+						/etc/mysql/my.cnf  --> /etc/my.cnf  --> --default-extra-file=/PATH/TO/CONF_FILE  --> ~/.my.cnf
+						
+					通用二进制格式安装的服务程序其配置文件查找次序：
+						/etc/my.cnf  --> /etc/mysql/my.cnf  --> --default-extra-file=/PATH/TO/CONF_FILE  --> ~/.my.cnf
+						
+					获取其读取次序的方法：
+						mysqld  --verbose  --help
+						
+					# cp  support-files/my-large.cnf  /etc/my.cnf
+					
+					添加三个选项：
+						datadir = /mydata/data
+						innodb_file_per_table = ON
+						skip_name_resolve = ON
+						
+				(4) 启动服务
+					# service  mysqld  start
+						
+回顾：MariaDB的基础
+	关系：二维关系，表（行、列）
+	设计范式：
+		第一范式：字段是原子性的；
+		第二范式：存在可用主键；
+		第三范式：任何都不应该依赖于其它表的非主属性；
+	约束：主键、惟一键、外键、检查性约束；
+	MariaDB安装方式：
+		包管理器(rpm, deb)
+		通用二进制格式；
+		源码编译安装；
+	SQL：
+		数据库、表、索引、视图、存储过程、存储函数、触发器、事件调度器、用户和权限；
+		元数据数据库：mysql
+		
+		DDL, DML
+			DDL: CREATE, ALTER, DROP
+			DML:  INSERT, DELETE, UPDATE, SELECT
+			DCL: GRANT, REVOKE
+			
+MariaDB的基础(2)
+
+	MariaDB程序的组成：
+		C：Client
+			mysql：CLI交互式客户端程序；
+			mysqldump：备份工具；
+			mysqladmin：管理工具；
+			mysqlbinlog：
+			...
+		S：Server
+			mysqld
+			mysqld_safe：建议运行服务端程序；
+			mysqld_multi：多实例；
+			
+			三类套接字地址：
+				IPv4, 3306/tcp
+				Unix Sock：/var/lib/mysql/mysql.sock, /tmp/mysql.sock
+					C <--> S: localhost, 127.0.0.1
+					
+	命令行交互式客户端程序：mysql
+		mysql 
+			mysql [OPTIONS] [database]
+			
+			常用选项：
+				-uUSERNAME：用户名，默认为root；
+				-hHOST：远程主机（即mysql服务器）地址，默认为localhost; 
+				-p[PASSWORD]：USERNAME所表示的用户的密码； 默认为空；
+				
+				注意：mysql的用户账号由两部分组成：'USERNAME'@'HOST'; 其中HOST用于限制此用户可通过哪些远程主机连接当前的mysql服务；
+					HOST的表示方式，支持使用通配符：
+						%：匹配任意长度的任意字符；
+							172.16.%.%,  172.16.0.0/16
+						_：匹配任意单个字符；
+						
+				-Ddb_name：连接到服务器端之后，设定其处指明的数据库为默认数据库；
+				-e 'SQL COMMAND;'：连接至服务器并让其执行此命令后直接返回；
+				
+			命令：
+				客户端命令：本地执行
+					mysql> help
+						\u db_name：设定哪个库为默认数据库
+						\q：退出；
+						\d CHAR：设定新的语句结束符；
+						\g：语句结束标记；
+						\G：语句结束标记，结果竖排方式显式；
+						\s：
+				服务端命令：通过mysql连接发往服务器执行并取回结果；
+					DDL， DML， DCL 
+					
+					注意：每个语句必须有语句结束符，默认为分号(;)
+					
+			数据类型：
+				表：行和列
+					创建表：定义表中的字段；
+					
+				定义字段时，关键的一步即为确定其数据类型；
+					用于确定：数据存储格式、能参与运算种类、可表示的有效的数据范围；
+					
+				字符型：字符集 
+					码表：在字符和二进制数字之间建立映射关系；
+					
+				种类：
+					字符型：
+						定长字符型：
+							CHAR(#)：不区分字符大小写
+							BINARY(#)：区分字符大小写
+						变长字符型：
+							VARCHAR(#)
+							VARBINARY(#)
+						对象存储：
+							TEXT
+							BLOB
+						内置类型：
+							SET 
+							ENUM						
+					数值型：
+						精确数值型：
+							INT（TINYINT，SMALLINT，MEDIUMINT，INT，BIGINT） 
+						近似数值型：
+							FLOAT
+							DOBULE
+					日期时间型：
+						日期型：DATE
+						时间型：TIME
+						日期时间型：DATETIME
+						时间戳：TIMESTAMP
+						年份：YEAR(2), YEAR(4)
+						
+				数据类型有修饰符：
+					UNSIGNED：无符号；
+					NOT NULL：非空；
+					DEFAULT  value：默认值；
+					
+		服务器端命令：
+			DDL：数据定义语言，主要用于管理数据库组件，例如表、索引、视图、用户、存储过程
+				CREATE、ALTER、DROP
+			DML：数据操纵语言，主要用管理表中的数据，实现数据的增、删、改、查；
+				INSERT， DELETE， UPDATE， SELECT
+				
+			获取命令帮助：
+				mysql> help  KEYWORD
+				
+			数据库管理：
+				创建：
+					CREATE  {DATABASE | SCHEMA}  [IF NOT EXISTS]  db_name;
+						[DEFAULT]  CHARACTER SET [=] charset_name
+						[DEFAULT]  COLLATE [=] collation_name
+						
+					查看支持的所有字符集：SHOW CHARACTER SET 
+					查看支持的所有排序规则：SHOW  COLLATION
+					
+				修改：
+					ALTER {DATABASE | SCHEMA}  [db_name]
+						[DEFAULT]  CHARACTER SET [=] charset_name
+						[DEFAULT]  COLLATE [=] collation_name
+						
+				删除：
+					DROP {DATABASE | SCHEMA} [IF EXISTS] db_name
+					
+				查看：
+					SHOW DATABASES LIKE  ’‘;
+						
+			表管理：
+				创建：
+					CREATE TABLE  [IF NOT EXISTS]  tbl_name  (create_defination)  [table_options]
+					
+					create_defination:
+						字段：col_name  data_type
+						键：
+							PRIMARY KEY (col1, col2, ...)
+							UNIQUE KEY  (col1, col2,...)
+							FOREIGN KEY (column)
+						索引：
+							KEY|INDEX  [index_name]  (col1, col2,...)
+							
+					table_options：
+						ENGINE [=] engine_name
+						
+					查看数据库支持的所有存储引擎类型：
+						mysql> SHOW  ENGINES;
+						
+					查看某表的存储引擎类型：
+						mysql> SHOW  TABLES  STATUS  [LIKE  'tbl_name']
+					
+				修改：
+					ALTER [ONLINE | OFFLINE] [IGNORE] TABLE tbl_name  [alter_specification [, alter_specification] ...]
+					
+					alter_specification:
+						字段：
+							添加：ADD  [COLUMN]  col_name  data_type  [FIRST | AFTER col_name ]
+							删除：DROP  [COLUMN] col_name 
+							修改：
+								CHANGE [COLUMN] old_col_name new_col_name column_definition  [FIRST|AFTER col_name]	
+								MODIFY [COLUMN] col_name column_definition  [FIRST | AFTER col_name]
+						键：
+							添加：ADD  {PRIMARY|UNIQUE|FOREIGN}  KEY (col1, col2,...)
+							删除：
+								主键：DROP PRIMARY KEY
+								外键：DROP FOREIGN KEY fk_symbol
+						索引：
+							添加：ADD {INDEX|KEY} [index_name]  (col1, col2,...)
+							删除：DROP {INDEX|KEY}  index_name
+						表选项：
+							ENGINE [=] engine_name
+						
+					查看表上的索引的信息：
+						mysql> SHOW INDEXES FROM tbl_name;
+						
+				删除：
+					DROP  TABLE  [IF EXISTS]   tbl_name [, tbl_name] ...
+					
+				表的引用方式：
+					tbl_name
+					db_name.tbl_name
+			
+				第二种创建方式：
+					复制表结构；
+					
+				第三种创建方式：
+					复制表数据；
+			
+			索引管理：
+				索引是特殊的数据结构；
+				
+				索引：要有索引名称；
+				
+				创建：
+					CREATE  [UNIQUE|FULLTEXT|SPATIAL] INDEX  index_name  [BTREE|HASH]  ON tbl_name (col1, col2,,...)
+				
+				删除：
+					DROP  INDEX index_name ON tbl_name
+					
+					
+			表：
+					CREATE TABLE [IF NOT EXISTS] tb_name (col1 datatype 修饰符, col2 datatype 修饰符) ENGINE=''
+
+					查看所有的引擎：SHOW ENGINES;
+
+					查看表：SHOW TABLES [FROM db_name]
+					查看表结构：DESC [db_name.]tb_name
+
+					删除表：
+					DROP TABLE [IF EXISTS] tb_name；
+
+					数据类型：
+						字符型
+							定长字符型：CHAR(#), BINARY(#)
+							变长字符型: VARCHAR(#), VARBINARY(#)
+
+							对象存储：
+								TEXT: 不区分大小写									
+								BLOB：区分字符大小写
+							内置类型：
+								ENUM
+								SET
+						数值型
+							精确数值型
+								整型: int
+									tinyint: 1byte
+									smallint: 2bytes
+									mediumint: 3bytes
+									int: 4bytes
+									bigint: 8bytes
+								十进制: decimal
+							近似数值型
+								单精度浮点型
+									float
+								双精度浮点型
+									double
+
+					修饰符：
+						NOT NULL：非空约束
+						DEFAULT VALUE: 设定默认值
+
+				
+					
+			DML：INSERT， DELETE， UPDATE， SELECT
+				
+				INSERT INTO：
+					INSERT  [INTO]  tbl_name  [(col1,...)]  {VALUES|VALUE}  (val1, ...),(...),...
+					
+					注意：
+						字符型：引号；
+						数值型：不能用引号；
+						
+				SELECT：
+					(1) SELECT  *  FROM  tbl_name;
+					(2) SELECT  col1, col2, ...  FROM  tbl_name;
+						显示时，字段可以显示为别名；
+							col_name  AS  col_alias
+					(3)  SELECT  col1, ...  FROM tbl_name  WHERE clause; 
+						WHERE clause：用于指明挑选条件；
+							col_name 操作符 value：
+								age > 30; 
+								
+							操作符(1) ：
+								>, <, >=, <=, ==, !=
+								
+							组合条件：
+								and 
+								or
+								not
+								
+							操作符(2) ：
+								BETWEEN ...  AND ...
+								LIKE 'PATTERN'
+									通配符：
+										%：任意长度的任意字符；
+										_：任意单个字符；
+								RLIKE  'PATTERN'
+									正则表达式对字符串做模式匹配；
+								IS NULL
+								IS NOT NULL
+					(4) SELECT col1, ... FROM tbl_name  [WHERE clause]  ORDER BY  col_name, col_name2, ...  [ASC|DESC];
+						ASC: 升序；
+						DESC： 降序；
+						
+				DELETE：
+					DELETE   FROM  tbl_name  [WHERE where_condition]  [ORDER BY ...]  [LIMIT row_count]
+					
+					(1) DELETE  FROM  tbl_name  WHERE where_condition 
+					(2) DELETE  FROM  tbl_name  [ORDER BY ...]  [LIMIT row_count]
+					
+				UPDATE：
+					UPDATE [LOW_PRIORITY] [IGNORE] table_reference  SET col_name1=value1 [, col_name2=value2] ... [WHERE where_condition]  [ORDER BY ...] [LIMIT row_count]
+					
+			用户账号及权限管理：
+				
+				用户账号：'username'@'host'
+					host：此用户访问当前mysql服务器时，允许其通过哪些主机远程创建连接；
+						表示方式：IP，网络地址、主机名、通配符(%和_)；
+						
+					禁止检查主机名：my.cnf
+						[mysqld]
+						skip_name_resolve = ON
+						
+				创建用户账号：
+					CREATE  USER   'username'@'host'  [IDENTIFIED BY  'password'];
+					
+				删除用户账号：
+					DROP USER  ’user‘@’host' [, user@host] ...
+
+				授权：
+					权限级别：管理权限、数据库、表、字段、存储例程；
+					
+					GRANT  priv_type,...  ON  [object_type]  db_name.tbl_name  TO  'user'@'host'  [IDENTIFIED BY  'password'];
+						
+						priv_type： ALL  [PRIVILEGES]
+						db_name.tbl_name：
+							*.*：所有库的所有表；
+							db_name.*：指定库的所有表；
+							db_name.tbl_name：指定库的特定表；
+							db_name.routine_name：指定库上的存储过程或存储函数；
+						
+						[object_type]
+							TABLE
+							FUNCTION
+							PROCEDURE
+						
+					查看指定用户所获得的授权：
+						SHOW GRANTS FOR  'user'@'host'
+						
+						SHOW GRANTS FOR CURRENT_USER;
+						
+					回收权限：
+						REVOKE  priv_type, ...  ON  db_name.tbl_name  FROM  'user'@'host';
+						
+					注意：MariaDB服务进程启动时，会读取mysql库的所有授权表至内存中；
+						(1) GRANT或REVOKE命令等执行的权限操作会保存于表中，MariaDB此时一般会自动重读授权表，权限修改会立即生效；
+						(2) 其它方式实现的权限修改，要想生效，必须手动运行FLUSH PRIVILEGES命令方可；
+						
+			加固mysql服务器，在安装完成后，运行mysql_secure_installation命令；
+				
+			图形管理组件：
+				phpMyAdmin
+					运行于lamp；
+				Navicat
+				Mysql-Front
+				ToadForMySQL
+				SQLyog
+				
+回顾：MySQL基础应用
+
+	安装方式、SQL（DDL，DML）
+		安装方式：
+			rpm包
+			通用二进制格式
+			源代码编译
+		SQL：
+			mysql/mysqld
+				mysqld：
+					3306/tcp 
+				mysql：
+					客户端命令：\c, \g, \G, \s, \u, \q
+					服务端命令：SQL
+						命令结束符
+						
+						DML: INSERT, DELETE, UPDATE, SELECT
+						DDL: CREATE DATABASE, ALTER DATABASE, DROP DATABASE, CREATE TABLE, ALTER TABLE, DROP TABLE, CREATE INDEX, DROP INDEX, CREATE USER, DROP USER, SELECT
+						DCL：GRANT， REVOKE
+						
+				数据类型：
+					字符型：
+						定长字符型：CHAR， BINARY
+						变长字符型：VARCHAR， VARBINARY
+						TEXT， BLOB
+						SET， ENUM
+					数值型：
+						精确数值型：INT 
+						近似数值型：FLOAT， DOUBLE
+					日期时间型：
+						DATE，TIME，DATETIME，TIMESTAMP

@@ -1,0 +1,337 @@
+Web Service
+	tcp：传输控制协议，面向连接的协议，通信前需要建立虚拟链路，结束后拆除链路
+		tcp协议特性：
+			建立连接
+			将数据打包成段
+			确认、重传以及超时
+			排序
+			流量监控
+			拥塞控制
+			
+		tcp三次握手过程：
+			1.	客户端发送 SYN=1 和 Sequence Number		（Sequence Number：序列号，客户端随机生成的）
+					 如：SYN=1,SN=100
+			
+			2.	服务器发送 SYN=1、 ACK=1、an=客户端发过来的序列号+1、Sequence Number	
+					（an：是确认号，告诉客户端，你的序列号已经收到了，请发送下一个序列号；Sequence Number：序列号，服务器端随机生成的）
+					如：SYN=1,ACK=1,an=101,SN=200
+					
+			3.	客户端发送 ACK=1、 Sequence Number、 an=服务端发过来的序列号+1	（Sequence Number：是服务端发过来的an）	
+					如：ACK=1,SN=101,an=201
+					
+					
+		tcp四次断开过程：
+			1.	
+			
+	udp：User Datagram Protocol，无连接协议
+	
+	Socket：IPC的一种实现，允许位于不同主机（甚至是同一个主机）上不同进程之间进行通信
+		三种Socket：
+			SOCK_STREAM：tcp socket
+			SOCK_DGRAM：udp socket
+			SOCK_RAW：裸socket
+			
+		Socket Domain：（根据使用的地址进行分类）
+			AF_INET：Address Family；INET：IPv4
+			AF_INET6：Address Family；INET6：IPv6
+			AF_UNIX：同一主机上不同进程之间通信使用
+			
+			注意：以上每类套接字都至少提供了两种socket:
+												流：可靠的传递，面向连接，无数据包边界
+												数据报：不可靠的传递，有数据包边界，无连接
+												
+		和套接字相关的系统调用：
+			socket()：向内核申请创建一个套接字
+			bind()：绑定并使用套接字
+			listen()：监听套接字
+			accept()：接收请求
+			connect()：请求连接建立
+			write()：向套接字文件写数据，即发送数据
+				send()：
+				sendto()：
+			read()：从套接字文件中读数据，即接收数据
+				recv()：
+				recvfrom()：
+			
+	端口：
+		0~1023：永久的分配给固定的程序使用
+		1024~41951：分配给固定的程序使用，但要求并不是特别严格
+		41952~65535：客户端程序随机使用的端口
+		
+		
+		
+	HTTP：HyperText Transfer Protocol（超文本传输协议）
+		HTML：HyperText Mark Language
+		URI: Uniform Resource Indentifier
+		
+		URL：Uniform Resource Locator	（用于描述某服务器上某特定资源的位置）
+			组成部分：
+				URL方案：scheme		如：http:// 或者 https://
+				服务器地址：ip:port
+				资源路径
+			
+			基本语法：
+				<scheme>://<user>:<password>@<host>:<port>/<path>;<params>?<query>#<frag>
+					params：参数
+					query：查询条件
+					frag：片段，文档中，点击某个章节，会定位到具体章节的内容位置
+				
+				
+		MIME: Multipurpose Internet Mail Extension  （多用途互联网邮件扩展）
+			将非文本数据在传输前重新编码为文本格式，接收方能够用相反的方式将其重新还原为原来的格式，还能够调用相应的程序来打开此文件
+		SMTP: Simple Mail Transmission Protocol, 纯文本
+		动态网页：服务器端存储的文档非HTML格式，而是编程语言开发的脚本，脚本接受参数之后在服务器运行一次，运行完成之后会生成HTML格式的文档，把生成的文档发给客户端
+		HTTP报文：
+			请求报文
+			响应报文
+			
+		一次完整的http请求并处理的过程：
+						1.	建立连接——接受或拒绝客户端连接请求；
+						2.	接收请求——通过网络读取HTTP请求报文；
+						3.	处理请求——解析请求报文并做出相应的动作；
+						4.	访问资源——访问请求报文中相关的资源；
+						5.	构建响应——使用正确的首部生成HTTP响应报文；
+						6.	发送响应——向客户端发送生成的响应报文；
+						7.	记录日志——当已经完成的HTTP事务记录进日志文件；
+						
+		http协议请求报文语法：
+				格式：
+					<method> <request-URL> <version>
+					<headers>					
+					
+					<entity-body>
+		http协议的响应报文语法：
+				格式：
+					<version> <status> <reason-phrase>	
+					<headers>
+
+					<entity-body>
+		http协议请求报文和响应报文语法解释：
+				method：请求方法；标明客户端希望服务器对资源执行的动作
+					GET：从服务器获取一个资源
+					HEAD：只从服务器获取响应首部
+					POST：向服务器发送服务器要处理的数据
+					PUT：将请求的主体部分存储在服务器上，而不是被服务器处理，即上传数据
+					DELETE：删除指定服务器上的文档
+					TRACE：追踪请求到达服务器时中间经过的代理服务器
+					OPTIONS：请求服务器返回对指定资源支持使用的方法
+
+				version：
+					HTTP/<major>.<minor>
+					
+				status：响应状态码，是个三位数字；如：200，301，302，404，502	
+					1xx: 纯信息（100,101）
+					2xx: “成功”类的信息 (200, 201, 202)
+					3xx：重定向类的信息 (301, 302, 304)
+					4xx: 客户端错误类的信息 (404)
+					5xx：服务器端错误类的信息
+					
+					常用状态码：
+						200：请求的所有数据通过响应报文的entity-body部分发送；reason-phrase 是 OK
+						301：请求的URL指向的资源已经被移除，但在响应报文中通过首部Location指明了资源现在所处的新位置；reason-phrase 是 Moved Permanently
+						302：与301相似，但在响应报文中通过首部Location指明了资源现在所处的临时新位置；reason-phrase 是 Found
+						304：客户端发出了条件式请求，如果服务器上的资源未曾发生改变，则通过响应此响应状态码给客户端；reason-phrase 是 Not Modified
+						401：需要输入账号和密码认证方能访问资源；reason-phrase 是 Unauthorized
+						403：请求被禁止；reason-phrase 是 Forbidden
+						404：服务器无法找到客户端请求的资源；reason-phrase 是 Not Found
+						500：服务器内部错误；reason-phrase 是 Internet Server Error
+						502：代理服务器从后端服务器收到一条伪响应；reason-phrase 是 Bad Geteway
+					
+				reason-phrase：用来说明响应状态码所标记的状态信息
+					OK
+					Moved Permanently
+					Found
+					Not Modified
+					Unauthorized
+					Forbidden
+					Not Found
+					Internet Server Error
+					Bad Geteway
+				
+				headers：用来标记请求或响应的属性的（每个请求或响应报文可包含任意个首部，每个首部都有首部名称，后面跟一个冒号，而后跟上一个可选的空格，接着是一个值）
+					格式：
+						Name: value
+					首部分类：
+						通用首部：
+							Date：报文的创建时间
+							Connection：连接状态：如：keep-alive
+							Via：显示报文经过的中间节点
+							Cache-Control：控制缓存
+							
+						请求首部：
+							Accept：通知服务器客户端可接受的媒体类型
+							Accept-Charset：通知服务器客户端可接受的字符集
+							Accept-Encoding：通知服务器客户端可接受的编码格式；如：gzip
+							Accept-Language：通知服务器客户端可接受的语言
+							Host：请求的服务器名称和端口号
+							Referer：包含当前正在请求的资源的上一级资源
+							User-Agent：客户端代理
+							
+							条件式请求首部：
+								Expect：客户端期望服务器发送的信息
+								If-Modified-Since：自从指定的时间后请求的资源是否发生过修改
+								If-Unmodified-Since：自从指定的时间后请求的资源是否没有发生过修改
+								If-Match：本地缓冲中存储的文档的Etag标签是否与服务器中存储的文档的Etag匹配
+								If-None-Match：本地缓冲中存储的文档的Etag标签是否与服务器中存储的文档的Etag不匹配
+								
+							安全请求首部：	
+								Authorization：向服务器发送认证信息；如：账号密码
+								Cookie：客户端向服务器发送cookie
+								
+							代理请求首部：	
+								Proxy-Authorization：向代理服务器发送认证信息
+								
+						响应首部：
+							信息性首部：
+								Age：响应持续时长
+								Server：服务器程序的软件名称和版本
+							
+							协商首部：（某资源有多种表示方法时才使用）
+								Accep-Ranges：服务器可接受客户端的请求范围类型
+								Vary：服务器查看其它首部列表
+							
+							安全认证首部：
+								Set-Cookie：向客户端设置cookie
+								WWW-Authenticate：来自服务器对客户端的质询认证表单
+						实体首部：
+							Allow：列出对此实体可使用的请求方法
+							Location：告诉客户端真正的实体位于何处
+							Content-Encoding：实体的编码格式
+							Content-Language：实体的语言
+							Content-Length：实体的长度
+							Content-Location：实体的真正位置
+							Content-Type：实体的类型
+							Etag：实体的扩展标签
+							Expire：实体的过期时间
+							Last-Modified：最后一次修改的时间
+							
+						扩展首部：
+					
+				entity-body：请求时附加的数据或响应时附加的数据
+				
+				
+			协议查看后分析工具：
+				tcpdump、tshart wireshark
+					
+					
+						
+Web服务器处理并发连接请求的架构方式：
+	1.单线程web服务器(Single-threaded web servers)
+		此种架构方式中，web服务器一次处理一个请求，结束后读取并处理下一个请求。在某请求处理过程中，其它所有的请求将被忽略，
+	因此，在并发请求较多的场景中将会出现严重的必能问题。
+
+	2.多进程/多线程web服务器
+		此种架构方式中，web服务器生成多个进程或线程并行处理多个用户请求，进程或线程可以按需或事先生成。有的web服务器应用程序
+	为每个用户请求生成一个单独的进程或线程来进行响应，不过，一旦并发请求数量达到成千上万时，多个同时运行的进程或线程将会消耗
+	大量的系统资源。
+	
+	3.I/O多路复用web服务器
+		为了能够支持更多的并发用户请求，越来越多的web服务器正在采用多种复用的架构——同步监控所有的连接请求的活动状态，当一个连
+	接的状态发生改变时(如数据准备完毕或发生某错误)，将为其执行一系列特定操作；在操作完成后，此连接将重新变回暂时的稳定态并返回
+	至打开的连接列表中，直到下一次的状态改变。由于其多路复用的特性，进程或线程不会被空闲的连接所占用，因而可以提供高效的工作模式。
+	
+	4.多路复用多线程web服务器
+		将多进程和多路复用的功能结合起来形成的web服务器架构，其避免了让一个进程服务于过多的用户请求，并能充分利用多CPU主机所提供的计算能力。
+		
+	代理
+		Web代理服务器工作于web客户端和web服务器之间，它负责接收来自于客户端的http请求，并将其转发至对应的服务；而后接收来自于服务端的响应，
+	并将响应报文回送至客户端。
+	
+	
+	三种并发相应模型：（多路处理模块）
+		1.prefork：多进程模型
+			一个主进程负责生成N个子进程(工作进程)，每个子进程处理一个用户请求；即便没有用户请求时，主进程也会预先生成多个空闲进程，随时等待请求到达
+			
+		2.worker：一个主进程生成多个子进程，每个子进程生成多个线程，每个线程响应一个请求
+		
+		3.event：一个主进程生成多个子进程，每个子进程响应多个请求
+		
+
+I/O类型
+	同步和异步：关注的是消息通知机制
+		同步：调用发出之后不会立即返回，但一旦返回，则返回的是最终结果（没有通知机制）
+		异步：调用发出之后，被调用方立即返回消息，但返回的并非最终结果；被调用者通过状态、通知机制等来通知调用者，或者通过回调函数来处理结果（有通知机制）
+	
+	阻塞和非阻塞：关注的是调用者等待被调用者返回调用结果时的状态
+		阻塞：在调用结果返回之前，调用者会被挂起等待，调用者只有在得到返回结果之后才能继续
+		非阻塞：在调用结果返回之前，调用者不会被挂起等待
+		
+		
+I/O模型（用户空间的进程是没有权限直接访问硬件的；注意内存有两种：用户空间内存、内核内存）
+	阻塞式I/O：调用者全程阻塞
+	非阻塞式I/O：调用者在第一阶段非阻塞，第二阶段阻塞
+	复用型I/O：在内核中有实现该模型的程序，如：select()、poll()，这是个系统调用；select()最多能接收的并发量是1024个
+	事件驱动型I/O：调用者在第一阶段非阻塞，第二阶段阻塞；当被调用者做完第一阶段的事后，会通知到调用者
+		引入的通知机制：
+				水平触发：通知调用者一次，调用者没有响应，再次通知调用者，直到调用者响应为止
+				边缘触发：只通知调用者一次，如果调用者没有及时响应，可以把这个通知事件通过回调函数让调用者自行来获取
+	异步I/O：调用者全程非阻塞，当被调用者做完全程的事后，会通知调用者
+	
+	
+	注意：某个应用程序的read操作：
+		1.因为 用户空间的进程是没有权限直接访问硬件的
+		2.用户空间进程向内核申请read磁盘上的某个数据
+		3.内核从磁盘读取数据到自己的内核内存中
+		4.内核把内核内存中的数据copy一份到用户空间中的进程内存中
+		5.用户空间的进程读取自己进程内存中的数据
+		
+		
+
+Nginx
+	调用了libevent
+		libevent：高性能网络库
+			里面实现了epoll
+			
+	nginx的特性：
+		模块化设计、较好的扩展性
+		高可靠性
+		低内存消耗	（一个线程响应多个用户请求）
+		支持热部署
+		支持事件驱动机制，支持异步IO，支持内存映射机制、支持sendfile、支持sendfile64
+		支持的复用器有：select()、poll()、rt signal
+		
+	nginx的进程工作机制：
+				master进程工作机制：
+					不负责接收和响应任何用户请求
+					master进程负责生成多个worker进程；
+					负责解析配置文件，并启动worker进程
+					读取并验证配置
+					创建绑定或关闭套接字
+					启动或终止worker进程个数
+					无需重启进程就可以让配置文件中的新配置被加载
+					完成平滑版本的升级
+					
+				worker进程工作机制：
+					响应用户请求：接收传入并处理客户端的连接请求
+					
+	nginx的基本功能：
+		静态资源的web服务器，能缓存打开的文件描述符
+		http、smtp、pop3协议的反向代理服务器
+		支持缓存加速、负载均衡
+		支持FastCGI协议
+		支持模块化、过滤器、SSI以及图像的大小调整
+		支持SSL
+		
+	nginx的扩展功能：
+		支持基于名称和IP的虚拟主机
+		支持keep-alive
+		支持平滑升级
+		支持定制访问日志、支持使用日志缓存区提供日志存储性能
+		支持url rewrite
+		支持路径别名
+		支持基于IP及用户的访问控制
+		支持速率限制、支持并发数限制
+		
+	nginx的工作模式：非阻塞、事件驱动、由一个master进程生成多个worker线程，每个worker线程响应n个请求
+	
+	nginx的模块类型：
+		核心模块
+		Standard HTTP Modules
+		Optional HTTP Modules
+		Mail Modules
+		3rd party modules
+		
+		
+					
+	
+			
